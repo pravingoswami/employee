@@ -1,7 +1,9 @@
 import React from 'react'
-import { Jumbotron, Button, Container, Col,  Form, FormGroup, Label, Input, FormText  } from 'reactstrap';
+import { Button, Container, Col} from 'reactstrap';
 import FormDesign from './FromDesign';
 import EmployeeShow from './EmployeeShow';
+import Swal from 'sweetalert2'
+import validator from 'validator'
 
 class Employee extends React.Component{
 
@@ -17,7 +19,8 @@ class Employee extends React.Component{
                     type : '',
                     mobile : ''
                 }],
-                dateOfBirth : Date.now()
+                dateOfBirth : Date.now(),
+                dob : ''
             }],
             employeeShow : false
         }
@@ -29,13 +32,15 @@ class Employee extends React.Component{
     }
 
     handleFormDataChange = (e, id) => {
-        let data = {[e.target.name] : e.target.value}
-        console.log(data)
+        // let data = {[e.target.name] : e.target.value}
+        let name = e.target.name
+        let value = e.target.value
         this.setState(prevState => ({
             employees : prevState.employees.map(emp => {
                 if(emp.empId == id){
-                    console.log({...emp, ...data})
-                    return {...emp, ...data}
+                    emp[name] = value
+                    // return {...emp, ...data}
+                    return emp
                 } else {
                     return {...emp}
                 }
@@ -45,8 +50,17 @@ class Employee extends React.Component{
 
     handleViewData = (e) => {
         e.preventDefault()
-        console.log(this.state)
-        this.setState({employeeShow : true})
+        this.state.employees.forEach(emp => {
+            if((emp.name == "") || (emp.designation = "")  || (emp.dob == "") || (emp.skills == [""]) || (emp.contactDetails.forEach(contact => (contact.type == "" || contact.mobile) && true )) ){
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Please Enter the Data!'
+                  })
+            } else {
+                this.setState({employeeShow : true})
+            }
+        }) 
     }
 
     handleAddEmployee = (e) => {
@@ -175,7 +189,6 @@ class Employee extends React.Component{
     }
 
     handleContactDetails = (e, i, id) => {
-        let data = {[e.target.name] : e.target.value}
         let name = e.target.name
         let value = e.target.value
         // console.log(data)

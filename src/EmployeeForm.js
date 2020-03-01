@@ -18,20 +18,7 @@ function EmpployeeForm(props){
                 <Label for="designation">Designation</Label>
                 <Input type="text" name="designation" id="designation" onChange = {this.handleFormData} value = {this.state.designation} placeholder="Enter Your Designation" />
                 <br></br>
-                {/* <Row>
-                    <Col md = "5">
-                    <Label for="types">Types</Label>
-                    <Input type="text" name="types" id="types" onChange = {this.handleContactDetails} value = {this.state.contactDetails.types} placeholder="Types" />
-                    </Col>
-                    <Col md = "5">
-                    <Label for="mobile">Mobile</Label>
-                    <Input type="text" name="mobile" id="mobile" onChange = {this.handleContactDetails} value = {this.state.contactDetails.mobile} placeholder="Enter Your Mobile No." />
-                    </Col>
-                    <Col md = "2">
-                        <br></br>
-                    <Button color = "primary" >Add</Button>
-                    </Col>
-                </Row> */}
+
                  <Label >Contact Details</Label>
                 <ContactDetail contactDetails = {this.state.contactDetails} 
                 handleContactDetailsChange = {this.handleContactDetailsChange}

@@ -1,6 +1,5 @@
 import React from 'react'
-import { Jumbotron, Button } from 'reactstrap'
-import './show.css'
+import { Jumbotron, Button, Table } from 'reactstrap'
 
 function EmployeeShow(props){
 
@@ -13,7 +12,7 @@ function EmployeeShow(props){
                         return (
                             <div>
                                 <h3><strong>Employee #{i}</strong></h3>
-                                <table>
+                                <Table striped dark >
                                     <tbody>
                                     <tr>
                                         <td><strong>Name</strong></td>
@@ -25,22 +24,27 @@ function EmployeeShow(props){
                                     </tr>
                                     <tr>
                                         <td><strong>Contact</strong></td>
-                                        <td>{
+                                        <td>
+                                            <ol>
+                                            {
                             emp.contactDetails.map(contact => <li>{contact.type} - {contact.mobile}</li>)
-                            }</td>
+                            }
+                                            </ol>
+                            </td>
                                     </tr>
                                     <tr>
                                         <td><strong>Skills</strong></td>
-                        <td>{
+                        <td><ol>
+                        {
                             emp.skills.map(skill => <li>{skill}</li>)
-                            }</td>
+                            }</ol></td>
                                     </tr>
                                     <tr>
                                         <td><strong>DOB</strong></td>
                                         <td>{emp.dob}</td>
                                     </tr>
                                     </tbody>
-                                </table>
+                                </Table>
                                 <br></br>
                             </div>
                         )
