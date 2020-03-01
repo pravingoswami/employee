@@ -1,126 +1,146 @@
 import React from 'react'
-import { Button, Form, FormGroup, Label, Input, FormText, Row, Col } from 'reactstrap'
+import { Button, Form, FormGroup, Label, Input, FormText, Row, Col, Jumbotron } from 'reactstrap'
+import DatePicker from 'react-datepicker'
+import "react-datepicker/dist/react-datepicker.css";
+import ContactDetail from './ContactDetail';
+import SkillForm from './Skills';
 
 class FormDesign extends React.Component{
 
-    constructor(){
-        super()
-        this.state = {
-            name : '',
-            designation :'',
-            types : '',
-            mobile : '',
-            contactDetails : {
-                types : '',
-                mobile : ''
-            },
+    handleSkillsData = (e, i, id) => {
 
-            skills : [""],
-            dob : ''
-        }
     }
-
-    handleFormData = (e) => {
-        this.setState({
-            [e.target.name] : e.target.value
-        })
-    }
-
-    handleContactDetails = (e) => {
-        this.setState({
-            contactDetails : {[e.target.name] : e.target.value}
-        })
-    }
-
-    handleSubmit = (e) => {
-        e.preventDefault()
-        const formData = {
-            name :this.state.name,
-            designation : this.state.designation,
-            contactDetails : this.state.contactDetails,
-            skills : this.state.skills,
-            types : this.state.types
-        }
-        console.log(formData)
-    }
-
-    addSkills = () => {
-        this.setState(prevState => ({
-            skills : [...prevState.skills, ""]
-        }))
-    }
-
-    handleSkills = (e, i) => {
-        this.state.skills[i] = e.target.value
-        this.setState(prevState => ({
-            skills : prevState.skills
-        }))
-    }
-
-    handleRemoveSkill = (i) => {
-        this.state.skills.splice(i, 1)
-        this.setState(prevState => ({
-            skills : prevState.skills
-        }))
-    }
-
 
     render(){
         return(
             <div>
-            <Form onSubmit = {this.handleSubmit} >
-                <Label for="name">Email</Label>
-                <Input type="text" name="name" id="name" onChange = {this.handleFormData} value = {this.state.name} placeholder="Enter Your Name" />
-                <br></br>
-                <Label for="designation">Designation</Label>
-                <Input type="text" name="designation" id="designation" onChange = {this.handleFormData} value = {this.state.designation} placeholder="Enter Your Designation" />
-                <br></br>
-                <Row>
-                    <Col md = "5">
-                    <Label for="types">Types</Label>
-                    <Input type="text" name="types" id="types" onChange = {this.handleContactDetails} value = {this.state.contactDetails.types} placeholder="Types" />
-                    </Col>
-                    <Col md = "5">
-                    <Label for="mobile">Mobile</Label>
-                    <Input type="text" name="mobile" id="mobile" onChange = {this.handleContactDetails} value = {this.state.contactDetails.mobile} placeholder="Enter Your Mobile No." />
-                    </Col>
-                    <Col md = "2">
-                        <br></br>
-                    <Button color = "primary" >Add</Button>
-                    </Col>
-                </Row>
-                <br></br>
-                <Row>
-                    <Col md = "10">
-                    <Label for="mobile">Skills</Label>
-                   {
-                       this.state.skills.map((skill, i) => {
-                           return (
-                               <Row key = {i} >
-                                   <Col md = "10">
-                                   <Input type="text" name="skills" id="skills" onChange = {(e) => this.handleSkills(e, i)} placeholder="Enter Your Skills." />
-                                   <br></br>
-                                   </Col>
-                                   <Col md = "2">
-                                   <Button color = "danger" onClick = {() => this.handleRemoveSkill(i)} >Remove</Button>
-                                   </Col>
-                               </Row>
-                           )
-                       })
-                   }
-                    </Col>
-                    <Col md = "2">
-                        <br></br>
-                        <Button color = "primary" onClick = {this.addSkills} >Add</Button>
-                    </Col>
-                </Row>
-                <br></br>
-                <Button type = "submit" color = "primary" >Submit</Button>
-            </Form>
+                {
+                    this.props.employees.map((emp, index) => {
+                        return(
+                            <Jumbotron>
+                                 <Form onSubmit = {this.handleSubmit} >
+                                    <Label>Name</Label>
+
+                                    <Input type="text" 
+                                    name="name"
+                                    value = {emp.name}
+                                    onChange = { (e) => this.props.handleFormDataChange(e,emp.empId)} 
+                                    placeholder="Enter Your Name" />
+
+
+                                    <br></br>
+
+                                    <Label>Designation</Label>
+
+                                    <Input type="text" 
+                                    name = "designation"
+                                    value = {emp.designation}
+                                    onChange = { (e) => this.props.handleFormDataChange(e,emp.empId)}
+                                    placeholder="Enter Your Designation" />
+
+
+                                    <br></br>
+
+                                    <Label>Skills</Label>
+                                    {
+                                        emp.skills.map((skill, i) => {
+                                            return (
+                                                <div>
+                                                    <Row key = {i} >
+                                                    <Col row = "10">
+                                                        <Input 
+                                                            type = "text"
+                                                            name = " skills"
+                                                            value = {skill}
+                                                            placeholder = "Enter Your Skill"
+                                                           onChange = {(e) => this.props.handleSkillData(e,i, emp.empId)}
+                                                        />
+                                                    </Col>
+
+                                                    <Col md = "2">
+                                                        {
+                                                            i === 0 ? <Button
+                                                            color = "primary"
+                                                            onClick = {() => this.props.handleAddSkills(i, emp.empId)}
+                                                            >Add</Button> : <Button
+                                                            color = "danger"
+                                                            onClick = {() => this.props.handleRemoveSkills(i, emp.empId)}
+                                                            >Remove</Button>
+                                                        }
+                                                    </Col>
+                                                </Row>
+                                                <br></br>
+                                                </div>
+                                            )
+                                        })
+                                    }
+
+                                    <br></br>
+                                    <Label>Contact Details</Label>
+                                    {
+                                        emp.contactDetails.map((contact, i) => {
+                                            return (
+                                                <div>
+                                                    <Row>
+                                                        <Col md = "5">
+                                                        <Label>Type</Label>
+                                                        <Input 
+                                                            type = "text"
+                                                            name = "type"
+                                                            value = {contact.type}
+                                                            placeholder = "Enter Your Type"
+                                                           onChange = {(e) => this.props.handleContactDetails(e,i, emp.empId)}
+                                                        />
+                                                        </Col>
+
+                                                        <Col md = "5">
+                                                        <Label>Mobile</Label>
+                                                        <Input 
+                                                            type = "text"
+                                                            name = "mobile"
+                                                            value = {contact.mobile}
+                                                            placeholder = "Enter Your Mobile No."
+                                                           onChange = {(e) => this.props.handleContactDetails(e,i, emp.empId)}
+                                                        />
+                                                        </Col>
+
+                                                        <Col md = "2">
+                                                        <br></br>
+                                                             {i === 0 ? <Button color = "primary" onClick = {() => this.props.handleAddContactDetails(i, emp.empId)} >Add</Button> : <Button color = "danger" onClick = {() => this.props.handleRemoveContactDetails(i, emp.empId)} >Remove</Button>}
+                                                        </Col>
+                                                    </Row>
+                                                    <br></br>
+                                                </div>
+                                            )
+                                        })
+                                    }
+
+                                    <br></br>
+
+                                    <Label>Designation</Label>
+
+                                    <br></br>
+
+
+                                    <DatePicker
+                                        selected={emp.dateOfBirth}
+                                        onChange={(date) => this.props.handleDateOfBirth(date, emp.empId)}
+                                    />
+                                    <br></br>
+                                </Form>
+                                <br></br>
+                                {
+                                    index !== 0 && <Button color = "danger"  
+                                    onClick = {() => this.props.handleRemoveEmployee(emp.empId)}
+                                    >Remove</Button>
+                                }
+                            </Jumbotron>
+                        )
+                    })
+                }
             </div>
         )
     }
-
 }
 
 export default FormDesign
