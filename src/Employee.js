@@ -3,10 +3,8 @@ import { Button, Container, Col} from 'reactstrap';
 import FormDesign from './FromDesign';
 import EmployeeShow from './EmployeeShow';
 import Swal from 'sweetalert2'
-import validator from 'validator'
 
 class Employee extends React.Component{
-
     constructor(){
         super()
         this.state = {
@@ -23,8 +21,7 @@ class Employee extends React.Component{
                 dob : ''
             }],
             employeeShow : false
-        }
-        
+        }     
     }
 
     headerStyle = {
@@ -32,14 +29,12 @@ class Employee extends React.Component{
     }
 
     handleFormDataChange = (e, id) => {
-        // let data = {[e.target.name] : e.target.value}
         let name = e.target.name
         let value = e.target.value
         this.setState(prevState => ({
             employees : prevState.employees.map(emp => {
-                if(emp.empId == id){
+                if(emp.empId === id){
                     emp[name] = value
-                    // return {...emp, ...data}
                     return emp
                 } else {
                     return {...emp}
@@ -51,7 +46,13 @@ class Employee extends React.Component{
     handleViewData = (e) => {
         e.preventDefault()
         this.state.employees.forEach(emp => {
-            if((emp.name == "") || (emp.designation = "")  || (emp.dob == "") || (emp.skills == [""]) || (emp.contactDetails.forEach(contact => (contact.type == "" || contact.mobile) && true )) ){
+            if((emp.name === "") || (emp.designation === "")  || (emp.dob === "")){
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Please Enter the Data!'
+                  })
+            } else if(emp.skills.find(skill => skill === "")) {
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
@@ -64,7 +65,6 @@ class Employee extends React.Component{
     }
 
     handleAddEmployee = (e) => {
-        console.log('employee added')
         this.setState(prevState => ({
             employees : [...prevState.employees, {
                 empId : Number(Date.now()),
@@ -79,27 +79,22 @@ class Employee extends React.Component{
                 dob : ''
             } ]
         }))
-        console.log(this.state)
     }
 
     handleRemoveEmployee = (id) => {
-        console.log('employee removed')
         this.setState(prevState => ({
             employees : prevState.employees.filter(emp => emp.empId !== id)
         }))
-        console.log(this.state)
     }
 
     handleDateOfBirth = (date, id) => {
-           const monthNames = ["January", "February", "March", "April", "May", "June",
+        const monthNames = ["January", "February", "March", "April", "May", "June",
            "July", "August", "September", "October", "November", "December"
          ]
-             let temp = `${date.getDate()}-${monthNames[date.getMonth()]}-${date.getFullYear()}`
-         
-                 console.log(temp)
+        let temp = `${date.getDate()}-${monthNames[date.getMonth()]}-${date.getFullYear()}`
         this.setState(prevState => ({
             employees : prevState.employees.map(emp => {
-                if(emp.empId == id){
+                if(emp.empId === id){
                     return {...emp, dateOfBirth : date, dob : temp}
                 } else {
                     return {...emp}
@@ -109,7 +104,6 @@ class Employee extends React.Component{
     }
 
     handleDownloadFile = () => {
-        console.log(this.state.employees)
         const empData = [...this.state.employees]
         empData.forEach(emp => delete emp.empId)
         const data = "text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(empData))
@@ -121,7 +115,7 @@ class Employee extends React.Component{
     handleAddSkills = (i, id) => {
         this.setState(prevState => ({
             employees : prevState.employees.map(emp => {
-                if(emp.empId == id){
+                if(emp.empId === id){
                     return {...emp, skills : [...emp.skills, ""]}
                 } else {
                     return emp
@@ -133,7 +127,7 @@ class Employee extends React.Component{
     handleRemoveSkills = (i, id) => {
         this.setState(prevState => ({
             employees : prevState.employees.map(emp => {
-                if(emp.empId == id){
+                if(emp.empId === id){
                     emp.skills.splice(i, 1)
                     return emp
                 } else {
@@ -144,14 +138,11 @@ class Employee extends React.Component{
     }
 
     handleSkillData = (e, i, id) => {
-        console.log(e.target.value)
         const value = e.target.value
-        console.log('hiiiii')
         this.setState(prevState => ({
             employees : prevState.employees.map(emp => {
-                if(emp.empId == id){
+                if(emp.empId === id){
                     emp.skills[i] = value
-                    console.log('emp', emp)
                     return emp
                 } else {
                     return emp
@@ -163,11 +154,21 @@ class Employee extends React.Component{
     handleAddContactDetails = (i, id) => {
         this.setState(prevState => ({
             employees : prevState.employees.map(emp => {
-                if(emp.empId == id){
-                    return {...emp, contactDetails : [...emp.contactDetails, {
-                        type : '',
-                        mobile : ''
-                    }]}
+                if(emp.empId === id){
+                    if(emp.contactDetails.length < 4){
+                        return {...emp, contactDetails : [...emp.contactDetails, {
+                            type : '',
+                            mobile : ''
+                        }]}
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Contact Detail information limit exceeds !'
+                          })
+                          return emp
+                    }
+                 
                 } else {
                     return emp
                 }
@@ -178,7 +179,7 @@ class Employee extends React.Component{
     handleRemoveContactDetails = (i, id) => {
         this.setState(prevState => ({
             employees : prevState.employees.map(emp => {
-                if(emp.empId == id){
+                if(emp.empId === id){
                     emp.contactDetails.splice(i, 1)
                     return emp
                 } else {
@@ -191,10 +192,9 @@ class Employee extends React.Component{
     handleContactDetails = (e, i, id) => {
         let name = e.target.name
         let value = e.target.value
-        // console.log(data)
         this.setState(prevState => ({
             employees : prevState.employees.map(emp => {
-                if(emp.empId == id){
+                if(emp.empId === id){
                     emp.contactDetails[i][name] = value
                     return emp
 
@@ -207,7 +207,7 @@ class Employee extends React.Component{
 
     render(){
         return(
-            <div>{console.log('state',this.state)}
+            <div>
                 <Container>
                 <br></br>
                 <h1 className="display-3" style = {this.headerStyle} ><strong>Employee Data</strong></h1>
@@ -229,13 +229,13 @@ class Employee extends React.Component{
                   <Col style = {{display : "block", textAlign : "center"}} >
                   <Button color = "primary" size = "lg" block onClick = {this.handleAddEmployee} >Add Employee</Button>
                     <br></br>
-                    <Button color = "success" size = "lg" block onClick = {
-                        this.handleViewData
-                    } >View Employee</Button>
+                    <Button color = "success" size = "lg" block onClick = {this.handleViewData
+                    } > View Employee</Button>
                   </Col>
 
                   <br></br>
                 <br></br>
+
                 {
                     this.state.employeeShow && <EmployeeShow employees = {this.state.employees}
                     handleDownloadFile = {this.handleDownloadFile}

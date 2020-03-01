@@ -12,25 +12,16 @@ function FormDesign(props){
             {
                 props.employees.map((emp, index) => {
                     return(
-                        <Jumbotron>
+                        <Jumbotron key = {emp.empId} >
                              <Form >
+
                                 <Label>Name</Label>
 
                                 <Input type="text" 
                                 name="name"
                                 value = {emp.name}
-                                onBlur = {() => {
-                                    if(emp.name == ""){
-                                        Swal.fire({
-                                            icon: 'error',
-                                            title: 'Oops...',
-                                            text: 'Please Enter the Name!'
-                                          })
-                                    }
-                                }}
                                 onChange = { (e) => props.handleFormDataChange(e,emp.empId)} 
                                 placeholder="Enter Your Name" />
-
 
                                 <br></br>
 
@@ -43,12 +34,13 @@ function FormDesign(props){
                                 placeholder="Enter Your Designation" />
                                 
                                 <br></br>
+
                                 <Label>Contact Details</Label>
                                 {
                                     emp.contactDetails.map((contact, i) => {
                                         return (
-                                            <div>
-                                                <Row>
+                                            <div key = {i} >
+                                                <Row key = {i} >
                                                     <Col md = "5">
                                                     <Label>Type</Label>
                                                     <Input 
@@ -81,8 +73,11 @@ function FormDesign(props){
                                                     </Col>
 
                                                     <Col md = "2">
+
                                                     <br></br>
+
                                                          {i === 0 ? <Button color = "primary" onClick = {() => props.handleAddContactDetails(i, emp.empId)} >Add</Button> : <Button color = "danger" onClick = {() => props.handleRemoveContactDetails(i, emp.empId)} >Remove</Button>}
+
                                                     </Col>
                                                 </Row>
                                                 <br></br>
@@ -91,14 +86,13 @@ function FormDesign(props){
                                     })
                                 }
 
-
                                 <br></br>
 
                                 <Label>Skills</Label>
                                 {
                                     emp.skills.map((skill, i) => {
                                         return (
-                                            <div>
+                                            <div key = {i} >
                                                 <Row key = {i} >
                                                 <Col row = "10">
                                                     <Input 
@@ -128,14 +122,11 @@ function FormDesign(props){
                                     })
                                 }
 
-                               
-
                                 <br></br>
 
                                 <Label>Designation</Label>
 
                                 <br></br>
-
 
                                 <DatePicker
                                     selected={emp.dateOfBirth}
