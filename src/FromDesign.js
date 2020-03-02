@@ -124,7 +124,7 @@ function FormDesign(props){
 
                                 <br></br>
 
-                                <Label>Designation</Label>
+                                <Label>Date of Birth</Label>
 
                                 <br></br>
 
