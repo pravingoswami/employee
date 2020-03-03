@@ -46,18 +46,27 @@ class Employee extends React.Component{
     handleViewData = (e) => {
         e.preventDefault()
         this.state.employees.forEach(emp => {
-            if((emp.name === "") || (emp.designation === "")  || (emp.dob === "")){
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: 'Please Enter the Data!'
-                  })
-            } else if(emp.skills.find(skill => skill === "")) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: 'Please Enter the Data!'
-                  })
+            if((emp.name === "") || 
+                (emp.designation === "")  || 
+                (emp.dob === "") || 
+                (emp.skills.forEach(skill => skill === "" &&  Swal.fire({
+                                                                    icon: 'error',
+                                                                    title: 'Oops...',
+                                                                    text: 'Please Enter the Skills!'
+                                                                }) 
+                ))  || 
+                (emp.contactDetails.forEach(contact =>  (contact.type === "" || contact.mobile === "") && Swal.fire({
+                                                                                                                icon: 'error',
+                                                                                                                title: 'Oops...',
+                                                                                                                text: 'Please Enter the Contact Details!'
+                                                                                                            })
+                )) 
+                ){
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Please Enter the Data!'
+                    })
             } else {
                 this.setState({employeeShow : true})
             }
@@ -106,6 +115,7 @@ class Employee extends React.Component{
     handleDownloadFile = () => {
         const empData = [...this.state.employees]
         empData.forEach(emp => delete emp.empId)
+        // how to download json -- reference from the stack overflow
         const data = "text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(empData))
         let ele = document.getElementById('download')
         ele.setAttribute("href", "data:"+data)
@@ -226,11 +236,16 @@ class Employee extends React.Component{
                     handleContactDetails = {this.handleContactDetails}
                     />
                 <br></br>
+
                   <Col style = {{display : "block", textAlign : "center"}} >
+
                   <Button color = "primary" size = "lg" block onClick = {this.handleAddEmployee} >Add Employee</Button>
+
                     <br></br>
+
                     <Button color = "success" size = "lg" block onClick = {this.handleViewData
                     } > View Employee</Button>
+
                   </Col>
 
                   <br></br>

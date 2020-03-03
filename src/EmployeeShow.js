@@ -27,7 +27,7 @@ function EmployeeShow(props){
                                                 <td>
                                                     <ol key = {emp.empId + i} >
                                                         {
-                                                            emp.contactDetails.map((contact, i) => <li key = {i} >{contact.type} - {contact.mobile}</li>)
+                                                            emp.contactDetails.map((contact, i) => ( contact.type !== "" && contact.mobile !== "") && (<li key = {i} >{contact.type} - {contact.mobile}</li>) )
                                                         }
                                                     </ol>
                                                 </td>
@@ -37,7 +37,7 @@ function EmployeeShow(props){
                                                 <td>
                                                     <ol key = {emp.empId + i} >
                                                         {
-                                                            emp.skills.map((skill, i) => <li key = {i} >{skill}</li>)
+                                                            emp.skills.map((skill, i) => (skill !== "") && ( <li key = {i} >{skill}</li>) )
                                                         }
                                                     </ol>
                                                 </td>
